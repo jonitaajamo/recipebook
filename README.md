@@ -1,4 +1,4 @@
-#Reseptikirjasto 
+##Reseptikirjasto 
 
 Reseptikirjasto on websovellus, johon käyttäjät voivat jakaa omia reseptejään ja lukea muiden reseptejä.
 Reseptejä voidaan kommentoida ja äänestää. Jokainen resepti sisältää yhden tai useamman tagin esim.

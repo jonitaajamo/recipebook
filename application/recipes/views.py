@@ -18,3 +18,11 @@ def recipe_create():
     db.session().commit()
 
     return redirect(url_for("recipes_index"))
+
+@app.route("/recipes/<recipe_id>/", methods=["POST"])
+def recipe_vote(recipe_id):
+    r = Recipe.query.get(recipe_id)
+    r.votes += 1
+    db.session().commit()
+
+    return redirect(url_for("recipes_index"))

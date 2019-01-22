@@ -5,12 +5,22 @@
     <th>Name</th>
     <th>Steps</th>
     <th>Tips</th>
+    <th>Votes</th>
   </tr>
   {% for recipe in recipes %}
   <tr>
     <td>{{ recipe.name }}</td>
     <td>{{ recipe.recipe_text }}</td>
     <td>{{ recipe.tips }}</td>
+    <td>{{ recipe.votes }}</td>
+    <td>
+      <form
+        method="POST"
+        action="{{ url_for('recipe_vote', recipe_id=recipe.id) }}"
+      >
+        <input type="submit" value="Vote" />
+      </form>
+    </td>
   </tr>
   {% endfor %}
 </table>

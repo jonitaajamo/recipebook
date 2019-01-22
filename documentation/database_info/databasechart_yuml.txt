@@ -1,0 +1,6 @@
+[Recipe|(pk)id:Integer; (fk)user_id:Integer; ingredients:String; steps:String; tips:String; public:boolean; votes:Integer], 
+[User|(pk)id:Integer; username:String; email:String;],
+[Comment|id:Integer; (fk)recipe_id:Integer; (fk)user_id:Integer; text:String], 
+[Type|id:Integer; typename:String], 
+[RecipeType|(fk)recipe_id:Integer; type_id:Integer]
+[Recipe]*-1[User], [Recipe]1-*[RecipeType], [RecipeType]*-1[Type]

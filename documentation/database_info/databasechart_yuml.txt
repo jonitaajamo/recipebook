@@ -1,6 +1,7 @@
-[Recipe|(pk)id:Integer; (fk)user_id:Integer; ingredients:String; steps:String; tips:String; public:boolean; votes:Integer], 
-[User|(pk)id:Integer; username:String; email:String;],
+[Recipe|(pk)id:Integer; (fk)user_id:Integer; ingredients:String; steps:String; tips:String; public:boolean; positive_votes:Integer; negative_votes:Integer], 
+[User|(pk)id:Integer; username:String; email:String; admin:boolean; (fk)favorite_recipe_id:Integer],
 [Comment|id:Integer; (fk)recipe_id:Integer; (fk)user_id:Integer; text:String], 
 [Type|id:Integer; typename:String], 
-[RecipeType|(fk)recipe_id:Integer; type_id:Integer]
-[Recipe]*-1[User], [Recipe]1-*[RecipeType], [RecipeType]*-1[Type]
+[RecipeType|(fk)recipe_id:Integer; type_id:Integer],
+[Recipe]*-1[User], [Recipe]1-*[RecipeType], [RecipeType]*-1[Type], 
+[Comment]*-1[Recipe], [Comment]*-1[User]

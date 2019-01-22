@@ -6,6 +6,10 @@
   </head>
 
   <body>
+    <ul>
+      <li><a href="{{ url_for('recipes_index') }}">Checkout recipes</a></li>
+      <li><a href="{{ url_for('recipe_form') }}">Post a recipe</a></li>
+    </ul>
     {% block body %}
     <p>Content.</p>
     {% endblock %}

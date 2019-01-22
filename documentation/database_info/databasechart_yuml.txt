@@ -1,7 +1,1 @@
-[Recipe|(pk)id:Integer; (fk)user_id:Integer; ingredients:String; steps:String; tips:String; public:boolean; positive_votes:Integer; negative_votes:Integer], 
-[User|(pk)id:Integer; username:String; email:String; admin:boolean; (fk)favorite_recipe_id:Integer],
-[Comment|id:Integer; (fk)recipe_id:Integer; (fk)user_id:Integer; text:String], 
-[Type|id:Integer; typename:String], 
-[RecipeType|(fk)recipe_id:Integer; type_id:Integer],
-[Recipe]*-1[User], [Recipe]1-*[RecipeType], [RecipeType]*-1[Type], 
-[Comment]*-1[Recipe], [Comment]*-1[User]
+[Recipe|(pk)id:Integer; (fk)user_id:Integer; date_created:Date; date_modified:Date; name:String;recipe_text:String; tips:String; public:boolean], [Ingredient|(pk)id:Integer; name:String], [RecipeIngredient|(fk)ingredient_id:Integer; (fk)recipe_id:Integer], [Vote|(fk)user_id:Integer; (fk)recipe_id:Integer; positive:boolean; date_voted:Date], [User|(pk)id:Integer; username:String; email:String; admin:boolean; (fk)favorite_recipe_id:Integer], [Comment|(pk)id:Integer; (fk)recipe_id:Integer; (fk)user_id:Integer; date_created:Date; text:String], [Type|id:Integer; typename:String], [RecipeType|(fk)recipe_id:Integer; type_id:Integer], [Recipe]*-1[User], [Recipe]1-*[RecipeType], [RecipeType]*-1[Type], [Comment]*-1[Recipe], [Comment]*-1[User], [Ingredient]1-*[RecipeIngredient], [Recipe]1-*[RecipeIngredient], [Vote]*-1[Recipe], [Vote]*-1[User]

@@ -1,0 +1,18 @@
+{% extends "layout.html" %} {% block body %}
+<h1>Recipes</h1>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Steps</th>
+    <th>Tips</th>
+  </tr>
+  {% for recipe in recipes %}
+  <tr>
+    <td>{{ recipe.name }}</td>
+    <td>{{ recipe.recipe_text }}</td>
+    <td>{{ recipe.tips }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% endblock %}

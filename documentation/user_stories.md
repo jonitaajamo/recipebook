@@ -8,7 +8,7 @@
 | user    | search recipes                      | I can find recipes of my liking                                  |
 | admin   | remove bad comments                 | no harm is caused by malicious users                             |
 | admin   | ban users                           | no harm is caused by malicious users                             |
-| admin   | remove malicious/incomplete recipes | recibook doesn't get ploated with useless recipes                |
+| admin   | remove malicious/incomplete recipes | recipebook doesn't get ploated with useless recipes                |
 | admin   | have access to users' emails        | I can contact them in problematic cases                          |
 
 User stories will be updated during development

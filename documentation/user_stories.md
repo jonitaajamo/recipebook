@@ -1,9 +1,9 @@
 # User Stories
 
-| As a/an | I want to                           | So that...                                                       |
+| As a/an | I want to...                        | So that...                                                       |
 | ------- | ----------------------------------- | ---------------------------------------------------------------- |
 | user    | add a new recipe                    | others can prepare it                                            |
-| user    | comment on other users' recipes     | they get good critic on it and everyone knows is the recipe good |
+| user    | comment on other users' recipes     | they get good critic on it and everyone knows if the recipe is good |
 | user    | vote for other users' recipes       | everybody can see quickly, if the recipe is good                 |
 | user    | search recipes                      | I can find recipes of my liking                                  |
 | admin   | remove bad comments                 | no harm is caused by malicious users                             |

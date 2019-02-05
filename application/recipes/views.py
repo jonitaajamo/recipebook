@@ -1,6 +1,7 @@
 from application import app, db
 from flask import redirect, render_template, request, url_for
 from application.recipes.models import Recipe
+from application.recipes.forms import RecipeForm
 
 @app.route("/recipes", methods=["GET"])
 def recipes_index():
@@ -8,11 +9,15 @@ def recipes_index():
 
 @app.route("/recipes/newrecipe/")
 def recipe_form():
-    return render_template("recipes/newrecipe.html")
+    return render_template("recipes/newrecipe.html", form = RecipeForm())
 
 @app.route("/recipes/", methods=["POST"])
 def recipe_create():
-    r = Recipe(request.form.get("name"), request.form.get("recipe_text"), request.form.get("tips"))
+    form = RecipeForm(request.form)
+    if not form.validate():
+        return render_template("recipes/newrecipe.html", form = form)
+
+    r = Recipe(form.name.data, form.recipetext.data, form.tips.data)
 
     db.session().add(r)
     db.session().commit()

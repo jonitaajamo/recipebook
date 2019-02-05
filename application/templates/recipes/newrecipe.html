@@ -1,12 +1,46 @@
 {% extends "layout.html" %} {% block body %}
 <h1>Post a new recipe</h1>
 <form method="POST" action="{{ url_for('recipe_create') }}">
-  <label for="name">Name: </label> <input type="text" name="name" /> <br />
-  <label for="recipe_text">Steps: </label>
-  <input type="text" name="recipe_text" /> <br />
-  <label for="tips">Extra tips: </label> <input type="text" name="tips" />
-  <br />
-  <input type="submit" name="Post recipe" />
+  <table>
+    <tr>
+      <td>{{ form.name.label }}</td>
+      <td>{{ form.name }}</td>
+      <td>
+        <ul>
+          {% for error in form.name.errors %}
+          <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>{{ form.recipetext.label }}</td>
+      <td>{{ form.recipetext }}</td>
+      <td>
+        <ul>
+          {% for error in form.recipetext.errors %}
+          <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>{{ form.tips.label }}</td>
+      <td>{{ form.tips }}</td>
+      <td>
+        <ul>
+          {% for error in form.tips.errors %}
+          <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <input type="submit" value="Submit" />
+      </td>
+    </tr>
+  </table>
 </form>
 
 {% endblock %}

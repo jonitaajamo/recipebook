@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, validators
+from wtforms import *
+
 
 class RecipeForm(FlaskForm):
     name = StringField("Recipe name", [validators.Length(min=2, max=144)])

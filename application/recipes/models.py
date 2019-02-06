@@ -12,6 +12,9 @@ class Recipe(db.Model):
     tips = db.Column(db.String(500), nullable=True)
     public = db.Column(db.Boolean, nullable=False)
     votes = db.Column(db.Integer, nullable=False)
+    
+    account_id = db.Column(db.Integer, db.ForeignKey('account.id'),
+                           nullable=False)
 
     def __init__(self, name, recipe_text, tips):
         self.name = name

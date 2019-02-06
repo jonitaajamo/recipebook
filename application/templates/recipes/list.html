@@ -1,7 +1,11 @@
 {% extends "layout.html" %} {% block body %}
 <h1>Recipes</h1>
+{% if not current_user.is_authenticated %}
+<p>Login to vote!</p>
+{% endif %}
 <table>
   <tr>
+    <th>By</th>
     <th>Name</th>
     <th>Steps</th>
     <th>Tips</th>
@@ -9,17 +13,20 @@
   </tr>
   {% for recipe in recipes %}
   <tr>
+    <td>{{ users[recipe.account_id - 1].username }}</td>
     <td>{{ recipe.name }}</td>
     <td>{{ recipe.recipe_text }}</td>
     <td>{{ recipe.tips }}</td>
     <td>{{ recipe.votes }}</td>
     <td>
+      {% if current_user.is_authenticated %}
       <form
         method="POST"
         action="{{ url_for('recipe_vote', recipe_id=recipe.id) }}"
       >
         <input type="submit" value="Vote" />
       </form>
+      {% endif %}
     </td>
   </tr>
   {% endfor %}

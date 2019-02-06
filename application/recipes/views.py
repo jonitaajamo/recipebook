@@ -20,7 +20,7 @@ def recipe_form():
 @login_required
 def recipe_create():
     form = RecipeForm(request.form)
-    if not form.validate():
+    if not form.validate() or form.confirm_password != form.password:
         return render_template("recipes/newrecipe.html", form = form)
 
     r = Recipe(form.name.data, form.recipetext.data, form.tips.data)

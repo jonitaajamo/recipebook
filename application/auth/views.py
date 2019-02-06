@@ -31,11 +31,16 @@ def auth_logout():
 def register_form():
     return render_template("auth/registerform.html", form = RegisterForm())
 
-@app.route("/auth/newaccount/", methods=["POST"])
+@app.route("/auth/register/", methods=["POST"])
 def auth_register():
     form = RegisterForm(request.form)
 
-    if not form.validate() or form.confirm_password != form.password:
+    if not form.confirm_password.data == form.password.data:
+        error = [(u'Passwords didn\'t match')]
+        form.password.errors = error
+        return render_template("auth/registerform.html", form = form)
+
+    if not form.validate():
         return render_template("auth/registerform.html", form = form)
 
     u = User(form.email.data, form.username.data, form.password.data)

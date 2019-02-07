@@ -40,10 +40,16 @@ def recipe_vote(recipe_id):
 
     return redirect(url_for("recipes_index"))
 
-@app.route("/recipes/<recipe_id>/", methods=["DELETE", "GET"])
+@app.route("/delete/<recipe_id>/", methods=["GET"])
 def recipe_delete(recipe_id):
     recipeToDelete = Recipe.query.get(recipe_id)
     db.session.delete(recipeToDelete)
     db.session().commit()
 
     return redirect(url_for("recipes_index"))
+
+@app.route("/recipes/<recipe_id>/", methods=["GET"])
+def recipe_get(recipe_id):
+    recipe = Recipe.query.get(recipe_id)
+    print(recipe.name)
+    return render_template("recipes/recipe.html", recipe=recipe)

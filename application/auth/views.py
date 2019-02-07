@@ -36,8 +36,8 @@ def auth_register():
     form = RegisterForm(request.form)
 
     if not form.confirm_password.data == form.password.data:
-        error = [(u'Passwords didn\'t match')]
-        form.password.errors = error
+        error = [(u'Password didn\'t match')]
+        form.confirm_password.errors = error
         return render_template("auth/registerform.html", form = form)
 
     if not form.validate():

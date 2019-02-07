@@ -27,7 +27,7 @@
         <input type="submit" value="Vote" />
       </form>
       <form
-        method="DELETE"
+        method="GET"
         action="{{ url_for('recipe_delete', recipe_id=recipe.id) }}"
       >
         <input type="submit" value="Delete" />

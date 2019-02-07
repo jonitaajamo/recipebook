@@ -1,10 +1,11 @@
 from application import db
 from application.models import Base
+from application.categories.models import Category
 
-junction_table = db.Table('RecipeCategory', Base.metadata, 
-    db.Column('recipe_id', db.Integer, db.ForeignKey('recipe.id')), 
-    db.Column('category_id', db.Integer, db.ForeignKey('category.id'))
-)
+class RecipeCategory(db.Model):
+    __table_args__ = (db.PrimaryKeyConstraint('recipe_id', 'category_id'),)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
 
 class Recipe(Base):
     
@@ -15,7 +16,7 @@ class Recipe(Base):
     votes = db.Column(db.Integer, nullable=False)
 
     account_id = db.Column(db.Integer, db.ForeignKey('account.id'), nullable=False)
-    category = db.relationship("Category", secondary=junction_table)
+    categories = db.relationship("RecipeCategory")
 
     def __init__(self, name, recipe_text, tips):
         self.name = name
@@ -23,9 +24,3 @@ class Recipe(Base):
         self.tips = tips
         self.votes = 0
         self.public = True
-
-class Category(db.Model):
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(144), nullable=False)
-    recipe = db.relationship("Recipe", secondary=junction_table)

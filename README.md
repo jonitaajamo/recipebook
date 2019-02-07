@@ -20,10 +20,12 @@ varten.
 Sovellus on toiminnassa osoitteessa https://recipebook-pro.herokuapp.com/
 
 Testitunnukset:
+
 käyttäjä: testuser
+
 salasana: testpassword
 
-(huom. älä rekisteröidy palveluun käyttämällä salasanaa, jota et halua jakaa koko maailmalle, suojaus on puutteellinen)
+(huom. älä rekisteröidy palveluun käyttämällä salasanaa, jota et halua jakaa koko maailmalle, suojaus on toistaiseksi puutteellinen)
 
 [käyttäjätarinat](https://github.com/jonitaajamo/recipebook/blob/master/documentation/user_stories.md)
 

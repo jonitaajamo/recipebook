@@ -11,7 +11,7 @@
     <th>Tips</th>
     <th>Votes</th>
   </tr>
-  {% for recipe in recipes %}
+  {% for recipe in recipes %} {% if recipe.public %}
   <tr>
     <td>{{ users[recipe.account_id - 1].username }}</td>
     <td>{{ recipe.name }}</td>
@@ -35,7 +35,7 @@
       {% endif %}
     </td>
   </tr>
-  {% endfor %}
+  {% endif %} {% endfor %}
 </table>
 
 {% endblock %}

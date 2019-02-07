@@ -9,7 +9,8 @@ from application.auth.models import User
 
 @app.route("/recipes", methods=["GET"])
 def recipes_index():
-    return render_template("recipes/list.html", recipes = Recipe.query.all(), users = User.query.all())
+    recipes = Recipe.query.all()
+    return render_template("recipes/list.html", recipes = recipes, users = User.query.all())
 
 @app.route("/recipes/newrecipe/")
 @login_required

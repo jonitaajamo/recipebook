@@ -12,7 +12,7 @@
     <th>Votes</th>
   </tr>
   {% for recipe in recipes %} {% if recipe.public %}
-  <tr>
+  <tr key="{{ recipe.id }}">
     <td>{{ users[recipe.account_id - 1].username }}</td>
     <td>{{ recipe.name }}</td>
     <td>{{ recipe.recipe_text }}</td>

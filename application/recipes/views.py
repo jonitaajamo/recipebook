@@ -20,7 +20,7 @@ def recipe_form():
 @login_required
 def recipe_create():
     form = RecipeForm(request.form)
-    if not form.validate() or form.confirm_password != form.password:
+    if not form.validate():
         return render_template("recipes/newrecipe.html", form = form)
 
     r = Recipe(form.name.data, form.recipetext.data, form.tips.data)
@@ -36,6 +36,14 @@ def recipe_create():
 def recipe_vote(recipe_id):
     r = Recipe.query.get(recipe_id)
     r.votes += 1
+    db.session().commit()
+
+    return redirect(url_for("recipes_index"))
+
+@app.route("/recipes/<recipe_id>/", methods=["DELETE", "GET"])
+def recipe_delete(recipe_id):
+    recipeToDelete = Recipe.query.get(recipe_id)
+    db.session.delete(recipeToDelete)
     db.session().commit()
 
     return redirect(url_for("recipes_index"))

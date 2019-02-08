@@ -36,7 +36,7 @@
     </div>
     {% endfor %} {% else %}
     <p><i>No comments, why don't you write the first one?</i></p>
-    {% endif %}
+    {% endif %} {% if current_user.is_authenticated %}
     <form
       method="POST"
       action="{{ url_for('comment_create', recipe_id=recipe.id) }}"
@@ -53,6 +53,9 @@
       </div>
       <input type="submit" class="btn btn-success" value="Submit" />
     </form>
+    {% else %}
+    <i>Login to comment</i>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

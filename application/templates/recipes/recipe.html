@@ -1,4 +1,58 @@
 {% extends "layout.html" %} {% block body %}
 <h1>{{ recipe.name }}</h1>
-
+<h5>
+  <i>By: {{ username }}</i>
+</h5>
+<div class="card bg-light mb-3">
+  <div class="card-header">Recipe</div>
+  <div class="card-body">
+    <p class="card-text">
+      {{ recipe.recipe_text }}
+    </p>
+  </div>
+</div>
+<div class="card bg-light mb-3">
+  <div class="card-header">Tips</div>
+  <div class="card-body">
+    <p class="card-text">
+      {{ recipe.tips }}
+    </p>
+  </div>
+</div>
+<div class="card">
+  <div class="card-body">
+    <div class="card-title"><h4>Comments</h4></div>
+    {% if not comments == none %} {% for comment in comments %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">{{ users[comment.account_id - 1].username }}</h5>
+        <h7 class="card-subtitle mb-2 text-muted">
+          {{ comment.date_created }}
+        </h7>
+        <p class="card-text">
+          {{ comment.text }}
+        </p>
+      </div>
+    </div>
+    {% endfor %} {% else %}
+    <p><i>No comments, why don't you write the first one?</i></p>
+    {% endif %}
+    <form
+      method="POST"
+      action="{{ url_for('comment_create', recipe_id=recipe.id) }}"
+    >
+      <div class="form-group">
+        {{ form.text(class="form-control rows=3") }}
+        {% for error in form.text.errors %}
+        <div class="card">
+          <div class="card-body text-white bg-warning">
+            {{ error }}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <input type="submit" class="btn btn-success" value="Submit" />
+    </form>
+  </div>
+</div>
 {% endblock %}

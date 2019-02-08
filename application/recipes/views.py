@@ -5,6 +5,7 @@ from flask_login import login_required, current_user
 from application.recipes.models import Recipe
 from application.comments.models import Comment
 from application.recipes.forms import RecipeForm
+from application.comments.forms import CommentForm
 
 from application.auth.models import User
 
@@ -53,6 +54,25 @@ def recipe_delete(recipe_id):
 @app.route("/recipes/<recipe_id>/", methods=["GET"])
 def recipe_get(recipe_id):
     recipe = Recipe.query.get(recipe_id)
-    comments = Comment.query.get(recipe_id)
-    print(recipe.name)
-    return render_template("recipes/recipe.html", recipe=recipe)
+    comments = Comment.query.filter_by(recipe_id = recipe_id).all()
+    username = User.query.get(recipe.account_id).username
+    users = User.query.all()
+    form = CommentForm(request.form)
+    return render_template("recipes/recipe.html", recipe=recipe, username=username, comments=comments, form=form, users=users)
+
+@app.route("/comment/<recipe_id>/", methods=["POST"])
+@login_required
+def comment_create(recipe_id):
+    form = CommentForm(request.form)
+    print("saatiin kommentti " + form.text.data)
+    if not form.validate():
+        return render_template("recipes/<recipe_id>/", form = form)
+
+    c = Comment(form.text.data)
+    c.account_id = current_user.id
+    c.recipe_id = recipe_id
+
+    db.session().add(c)
+    db.session().commit()
+
+    return recipe_get(recipe_id)

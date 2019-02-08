@@ -1,6 +1,7 @@
 from application import db
 from application.models import Base
 from application.categories.models import Category
+from application.comments.models import Comment
 
 class RecipeCategory(db.Model):
     __table_args__ = (db.PrimaryKeyConstraint('recipe_id', 'category_id'),)
@@ -16,7 +17,8 @@ class Recipe(Base):
     votes = db.Column(db.Integer, nullable=False)
 
     account_id = db.Column(db.Integer, db.ForeignKey('account.id'), nullable=False)
-    categories = db.relationship("RecipeCategory")
+    categories = db.relationship("RecipeCategory", backref='category', lazy=True)
+    comments = db.relationship("Comment", backref='comment', lazy=True)
 
     def __init__(self, name, recipe_text, tips):
         self.name = name

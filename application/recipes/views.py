@@ -3,6 +3,7 @@ from flask import redirect, render_template, request, url_for
 from flask_login import login_required, current_user
 
 from application.recipes.models import Recipe
+from application.comments.models import Comment
 from application.recipes.forms import RecipeForm
 
 from application.auth.models import User
@@ -52,5 +53,6 @@ def recipe_delete(recipe_id):
 @app.route("/recipes/<recipe_id>/", methods=["GET"])
 def recipe_get(recipe_id):
     recipe = Recipe.query.get(recipe_id)
+    comments = Comment.query.get(recipe_id)
     print(recipe.name)
     return render_template("recipes/recipe.html", recipe=recipe)

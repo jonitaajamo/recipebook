@@ -2,7 +2,7 @@
 %}
 <p>Welcome, {{ current_user.username }}</p>
 <p>Wow! Your recipes have {{ commentcount_on_own_recipes }} comments</p>
-<p>You have commented on {{ user_commentcount }} recipes</p>
+<p>You have commented on recipes {{ user_commentcount }} times!</p>
 {% else %}
 <p>Welcome! Feel free to browse, register or login to unlock full potential!</p>
 {% endif %} {% endblock %}

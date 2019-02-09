@@ -50,7 +50,7 @@ class User(Base):
         stmt = text("SELECT COUNT(*) FROM account"
                     " LEFT JOIN recipe ON recipe.account_id = account.id"
                     " LEFT JOIN comment ON comment.recipe_id = recipe.id"
-                    " WHERE account.id = :account")
+                    " WHERE recipe.account_id = :account AND comment.recipe_id = recipe.id ")
 
         response = db.engine.execute(stmt, account = current_user.id)
         res = 0

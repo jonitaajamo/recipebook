@@ -2,7 +2,7 @@ from application import app, db
 from flask import redirect, render_template, request, url_for
 from flask_login import login_required, current_user
 
-from application.recipes.models import Recipe
+from application.recipes.models import Recipe, Vote
 from application.comments.models import Comment
 from application.recipes.forms import RecipeForm
 from application.comments.forms import CommentForm
@@ -12,7 +12,23 @@ from application.auth.models import User
 @app.route("/recipes", methods=["GET"])
 def recipes_index():
     recipes = Recipe.query.all()
-    return render_template("recipes/list.html", recipes = recipes, users = User.query.all())
+    votes = Vote.query.all()
+    votecount = dict()
+    votedOn = []
+
+    for vote in votes:
+        if not vote.recipe_id in votecount:
+            votecount[vote.recipe_id] = 1
+        else:
+            votecount[vote.recipe_id] += 1
+
+    if current_user.is_authenticated:
+        votedOnQuery = Vote.query.filter(Vote.account_id == current_user.id).all()
+        for vote in votedOnQuery:
+            votedOn.append(vote.recipe_id)
+
+    users = User.query.all()
+    return render_template("recipes/list.html", recipes = recipes, users = users, votes=votecount, votedOn=votedOn)
 
 @app.route("/recipes/newrecipe/")
 @login_required
@@ -37,8 +53,13 @@ def recipe_create():
 @app.route("/recipes/<recipe_id>/", methods=["POST"])
 @login_required
 def recipe_vote(recipe_id):
-    r = Recipe.query.get(recipe_id)
-    r.votes += 1
+    v = Vote.query.filter(Vote.account_id == current_user.id).filter(Vote.recipe_id == recipe_id).all()
+    if v:
+        print("äänestetty jo: " + v)
+        return render_template('error.html'), 403
+    
+    newv = Vote(current_user.id, recipe_id)
+    db.session().add(newv)
     db.session().commit()
 
     return redirect(url_for("recipes_index"))

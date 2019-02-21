@@ -11,22 +11,31 @@
     <th>Tips</th>
     <th>Votes</th>
   </tr>
-  {% for recipe in recipes %} {% if recipe.public %}
+  {% for recipe in recipes %}
   <tr key="{{ recipe.id }}">
     <td>{{ users[recipe.account_id - 1].username }}</td>
     <td><a href="/recipes/{{recipe.id}}/">{{ recipe.name }}</a></td>
     <td>{{ recipe.recipe_text }}</td>
     <td>{{ recipe.tips }}</td>
-    <td>{{ recipe.votes }}</td>
+    {% if votes[recipe.id] %}
+    <td>{{ votes[recipe.id] }}</td>
+    {% else %}
+    <td>0</td>
+    {% endif %}
     <td>
       {% if current_user.is_authenticated %}
       <div class="btn-group">
+      {% if not recipe.id in votedOn %}
       <form
         method="POST"
         action="{{ url_for('recipe_vote', recipe_id=recipe.id) }}"
       >
         <input type="submit" value="Vote" class="btn btn-success" />
-      </form>
+      {% else %}
+      <form>
+        <button type="button" value="Vote" class="btn btn-success" disabled>Vote</button>
+      {% endif %}
+    </form>
       <form
         method="GET"
         action="{{ url_for('recipe_delete', recipe_id=recipe.id) }}"
@@ -36,8 +45,7 @@
       </form>
       {% endif %}
     </td>
-  </tr>
-  {% endif %} {% endfor %}
+  </tr>{% endfor %}
 </table>
 
 {% endblock %}

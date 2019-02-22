@@ -6,6 +6,7 @@ app = Flask(__name__)
 from flask_sqlalchemy import SQLAlchemy
 
 import os
+
 if os.environ.get("HEROKU"):
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
 else:
@@ -13,16 +14,6 @@ else:
     app.config["SQLALCHEMY_ECHO"] = True
 
 db = SQLAlchemy(app)
-
-
-# app's internal functionality
-from application import views
-
-from application.recipes import models
-from application.recipes import views
-
-from application.auth import models
-from application.auth import views
 
 # login management
 from application.auth.models import User
@@ -65,6 +56,15 @@ def login_required(role="ANY"):
             return fn(*args, **kwargs)
         return decorated_view
     return wrapper
+
+# app's internal functionality
+from application import views
+
+from application.recipes import models
+from application.recipes import views
+
+from application.auth import models
+from application.auth import views
 
 # load user from db
 @login_manager.user_loader

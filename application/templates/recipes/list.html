@@ -36,6 +36,7 @@
         <button type="button" value="Vote" class="btn btn-success" disabled>Vote</button>
       {% endif %}
     </form>
+    {% if current_user.id == recipe.account_id %}
       <form
         method="GET"
         action="{{ url_for('recipe_delete', recipe_id=recipe.id) }}"
@@ -43,6 +44,7 @@
     </div>
         <input type="submit" value="Delete" class="btn btn-danger" />
       </form>
+      {% endif %}
       {% endif %}
     </td>
   </tr>{% endfor %}

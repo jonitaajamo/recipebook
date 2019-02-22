@@ -1,6 +1,6 @@
-from application import app, db
+from application import app, db, login_required, login_manager
 from flask import redirect, render_template, request, url_for
-from flask_login import login_required, current_user
+from flask_login import current_user
 
 from application.recipes.models import Recipe, Vote
 from application.comments.models import Comment
@@ -31,12 +31,12 @@ def recipes_index():
     return render_template("recipes/list.html", recipes = recipes, users = users, votes=votecount, votedOn=votedOn)
 
 @app.route("/recipes/newrecipe/")
-@login_required
+@login_required(role="ANY")
 def recipe_form():
     return render_template("recipes/newrecipe.html", form = RecipeForm())
 
 @app.route("/recipes/", methods=["POST"])
-@login_required
+@login_required(role="ANY")
 def recipe_create():
     form = RecipeForm(request.form)
     if not form.validate():
@@ -51,7 +51,7 @@ def recipe_create():
     return redirect(url_for("recipes_index"))
 
 @app.route("/recipes/<recipe_id>/", methods=["POST"])
-@login_required
+@login_required(role="ANY")
 def recipe_vote(recipe_id):
     v = Vote.query.filter(Vote.account_id == current_user.id).filter(Vote.recipe_id == recipe_id).all()
     if v:
@@ -65,8 +65,11 @@ def recipe_vote(recipe_id):
     return redirect(url_for("recipes_index"))
 
 @app.route("/delete/<recipe_id>/", methods=["GET"])
+@login_required(role="ANY")
 def recipe_delete(recipe_id):
     recipeToDelete = Recipe.query.get(recipe_id)
+    if recipeToDelete.account_id != current_user.id:
+        return login_manager.unauthorized()
     db.session.delete(recipeToDelete)
     db.session().commit()
 
@@ -82,10 +85,9 @@ def recipe_get(recipe_id):
     return render_template("recipes/recipe.html", recipe=recipe, username=username, comments=comments, form=form, users=users)
 
 @app.route("/comment/<recipe_id>/", methods=["POST"])
-@login_required
+@login_required(role="ANY")
 def comment_create(recipe_id):
     form = CommentForm(request.form)
-    print("saatiin kommentti " + form.text.data)
     if not form.validate():
         return render_template("recipes/<recipe_id>/", form = form)
 

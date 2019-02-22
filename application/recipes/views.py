@@ -81,8 +81,16 @@ def recipe_get(recipe_id):
     comments = Comment.query.filter_by(recipe_id = recipe_id).all()
     username = User.query.get(recipe.account_id).username
     users = User.query.all()
+    voted = False
+    votes = Vote.query.filter_by(recipe_id = recipe_id).count()
+
+    if current_user.is_authenticated:
+        votedOnQuery = Vote.query.filter(Vote.account_id == current_user.id).all()
+        for vote in votedOnQuery:
+            voted = True
+
     form = CommentForm(request.form)
-    return render_template("recipes/recipe.html", recipe=recipe, username=username, comments=comments, form=form, users=users)
+    return render_template("recipes/recipe.html", recipe=recipe, username=username, comments=comments, form=form, users=users, voted=voted, votes=votes)
 
 @app.route("/comment/<recipe_id>/", methods=["POST"])
 @login_required(role="ANY")
@@ -98,4 +106,4 @@ def comment_create(recipe_id):
     db.session().add(c)
     db.session().commit()
 
-    return recipe_get(recipe_id)
+    return redirect(url_for('recipe_get', recipe_id=recipe_id))

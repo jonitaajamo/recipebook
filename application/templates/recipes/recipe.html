@@ -1,7 +1,8 @@
 {% extends "layout.html" %} {% block body %}
 <h1>{{ recipe.name }}</h1>
 <h5>
-  <i>By: {{ username }}</i>
+  <p><i>By: {{ username }}</i></p>
+  <p><i>{{ votes }} people liked this recipe</i></p>
 </h5>
 <div class="card bg-light mb-3">
   <div class="card-header">Recipe</div>
@@ -19,6 +20,29 @@
     </p>
   </div>
 </div>
+{% if current_user.is_authenticated %}
+<div class="btn-group mb-3">
+{% if not voted %}
+<form
+  method="POST"
+  action="{{ url_for('recipe_vote', recipe_id=recipe.id) }}"
+>
+  <input type="submit" value="Vote" class="btn btn-success" />
+{% else %}
+<form>
+  <button type="button" value="Vote" class="btn btn-success" disabled>Vote</button>
+{% endif %}
+</form>
+{% if current_user.id == recipe.account_id %}
+<form
+  method="GET"
+  action="{{ url_for('recipe_delete', recipe_id=recipe.id) }}"
+>
+  <input type="submit" value="Delete" class="btn btn-danger" />
+</form>
+{% endif %}
+</div>
+{% endif %}
 <div class="card">
   <div class="card-body">
     <div class="card-title"><h4>Comments</h4></div>

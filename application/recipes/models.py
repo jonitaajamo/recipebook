@@ -31,5 +31,4 @@ class Recipe(Base):
         self.name = name
         self.recipe_text = recipe_text
         self.tips = tips
-        self.votes = 0
         self.public = True

@@ -12,6 +12,7 @@ class User(Base):
     email = db.Column(db.String(144), nullable=False)
     username = db.Column(db.String(144), nullable=False)
     password = db.Column(db.String(144), nullable=False)
+    admin = db.Column(db.Boolean, nullable=False)
 
     recipes = db.relationship("Recipe", backref='account', lazy=True)
 
@@ -19,6 +20,7 @@ class User(Base):
         self.email = email
         self.username = username
         self.password = password
+        self.admin = False
 
     def get_id(self):
         return self.id
@@ -31,6 +33,11 @@ class User(Base):
 
     def is_authenticated(self):
         return True
+
+    def roles(self):
+        if self.admin:
+            return ["ADMIN"]
+        return ["USER"]
 
     @staticmethod
     def get_user_commentcount():

@@ -37,7 +37,7 @@ def login_required(role="ANY"):
             if not current_user:
                 return login_manager.unauthorized()
         
-            if not current_user.is_authenticated():
+            if not current_user.is_authenticated:
                 return login_manager.unauthorized()
             
             unauthorized = False

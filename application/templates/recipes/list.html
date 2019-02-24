@@ -1,53 +1,29 @@
 {% extends "layout.html" %} {% block body %}
-<h1>Recipes</h1>
+<h1>All recipes</h1>
 {% if not current_user.is_authenticated %}
 <p>Login to vote!</p>
-{% endif %}
-<table>
-  <tr>
-    <th>By</th>
-    <th>Name</th>
-    <th>Steps</th>
-    <th>Tips</th>
-    <th>Votes</th>
-  </tr>
-  {% for recipe in recipes %}
-  <tr key="{{ recipe.id }}">
-    <td>{{ users[recipe.account_id - 1].username }}</td>
-    <td><a href="/recipes/{{recipe.id}}/">{{ recipe.name }}</a></td>
-    <td>{{ recipe.recipe_text }}</td>
-    <td>{{ recipe.tips }}</td>
-    {% if votes[recipe.id] %}
-    <td>{{ votes[recipe.id] }}</td>
+{% endif %} {% for recipe in recipes %}
+<div class="card w-100 mb-3 card-block">
+  <div class="card-body">
+    <h5 class="card-title">
+      <a href="/recipes/{{ recipe.id }}/">{{ recipe.name }}</a>
+    </h5>
+    <h6 class="card-subtitle mb-2 text-muted">
+      By: {{ users[recipe.account_id - 1].username }}
+    </h6>
+    {% if commentcount[recipe.id] and commentcount[recipe.id] == 1 %}
+    <p class="card-text">{{ commentcount[recipe.id] }} comment</p>
+    {% elif commentcount[recipe.id] and commentcount[recipe.id] > 1 %}
+    <p class="card-text">{{ commentcount[recipe.id] }} comments</p>
     {% else %}
-    <td>0</td>
+    <p class="card-text">0 comments</p>
+    {% endif %} {% if votes[recipe.id] and votes[recipe.id] == 1 %}
+    <p class="card-text">{{ votes[recipe.id] }} votes</p>
+    {% elif votes[recipe.id] and votes[recipe.id] > 1 %}
+    <p class="card-text">{{ votes[recipe.id] }} votes</p>
+    {% else %}
+    <p class="card-text">0 votes</p>
     {% endif %}
-    <td>
-      {% if current_user.is_authenticated %}
-      <div class="btn-group">
-      {% if not recipe.id in votedOn %}
-      <form
-        method="POST"
-        action="{{ url_for('recipe_vote', recipe_id=recipe.id) }}"
-      >
-        <input type="submit" value="Vote" class="btn btn-success" />
-      {% else %}
-      <form>
-        <button type="button" value="Vote" class="btn btn-success" disabled>Vote</button>
-      {% endif %}
-    </form>
-    {% if current_user.id == recipe.account_id %}
-      <form
-        method="GET"
-        action="{{ url_for('recipe_delete', recipe_id=recipe.id) }}"
-      >
-    </div>
-        <input type="submit" value="Delete" class="btn btn-danger" />
-      </form>
-      {% endif %}
-      {% endif %}
-    </td>
-  </tr>{% endfor %}
-</table>
-
-{% endblock %}
+  </div>
+</div>
+{% endfor %} {% endblock %}

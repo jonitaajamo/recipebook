@@ -15,6 +15,8 @@ def recipes_index():
     votes = Vote.query.all()
     votecount = dict()
     votedOn = []
+    comments = Comment.query.all()
+    commentcount = dict()
 
     for vote in votes:
         if not vote.recipe_id in votecount:
@@ -22,13 +24,19 @@ def recipes_index():
         else:
             votecount[vote.recipe_id] += 1
 
+    for comment in comments:
+        if not comment.recipe_id in commentcount:
+            commentcount[comment.recipe_id] = 1
+        else:
+            commentcount[comment.recipe_id] += 1
+
     if current_user.is_authenticated:
         votedOnQuery = Vote.query.filter(Vote.account_id == current_user.id).all()
         for vote in votedOnQuery:
             votedOn.append(vote.recipe_id)
 
     users = User.query.all()
-    return render_template("recipes/list.html", recipes = recipes, users = users, votes=votecount, votedOn=votedOn)
+    return render_template("recipes/list.html", recipes = recipes, users = users, votes=votecount, votedOn=votedOn, commentcount=commentcount)
 
 @app.route("/recipes/newrecipe/")
 @login_required(role="ANY")
@@ -50,12 +58,43 @@ def recipe_create():
 
     return redirect(url_for("recipes_index"))
 
+@app.route("/recipes/update/<recipe_id>/", methods=["GET", "POST"])
+@login_required(role="ANY")
+def recipe_update(recipe_id):
+    rToUpdate = Recipe.query.get(recipe_id)
+
+    if rToUpdate.account_id != current_user.id:
+        return login_manager.unauthorized()
+
+    form = RecipeForm(request.form)
+    form.name.data = rToUpdate.name
+    form.ingredients.data = rToUpdate.ingredients
+    form.recipetext.data = rToUpdate.recipe_text
+    form.tips.data = rToUpdate.tips
+    
+    if request.method == "GET":
+        return render_template("recipes/editrecipe.html", form=form, recipe=rToUpdate)
+    
+    if not form.validate():
+        return render_template("recipes/editrecipe.html", form = form)
+
+
+    form = RecipeForm(request.form)
+    rToUpdate.name = form.name.data
+    rToUpdate.ingredients = form.ingredients.data
+    rToUpdate.recipe_text = form.recipetext.data
+    rToUpdate.tips = form.tips.data
+
+    db.session().add(rToUpdate)
+    db.session().commit()
+
+    return redirect(url_for("recipes_index"))
+
 @app.route("/recipes/<recipe_id>/", methods=["POST"])
 @login_required(role="ANY")
 def recipe_vote(recipe_id):
     v = Vote.query.filter(Vote.account_id == current_user.id).filter(Vote.recipe_id == recipe_id).all()
     if v:
-        print("äänestetty jo: " + v)
         return render_template('error.html'), 403
     
     newv = Vote(current_user.id, recipe_id)

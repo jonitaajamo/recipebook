@@ -29,26 +29,36 @@
   </div>
 </div>
 {% if current_user.is_authenticated %}
+<div class="btn-toolbar justify-content-between">
 <div class="btn-group mb-3">
 {% if not voted %}
 <form
   method="POST"
   action="{{ url_for('recipe_vote', recipe_id=recipe.id) }}"
 >
-  <input type="submit" value="Vote" class="btn btn-success" />
+  <input type="submit" value="Vote" class="btn btn-success mr-2" />
 {% else %}
 <form>
-  <button type="button" value="Vote" class="btn btn-success" disabled>Vote</button>
+  <button type="button" value="Vote" class="btn btn-success mr-2" disabled>Vote</button>
 {% endif %}
 </form>
 {% if current_user.id == recipe.account_id %}
 <form
   method="GET"
+  action="{{ url_for('recipe_update', recipe_id=recipe.id) }}"
+>
+  <input type="submit" value="Edit" class="btn btn-info mr-2" />
+</form>
+</div>
+<div class="btn-group">
+<form
+  method="GET"
   action="{{ url_for('recipe_delete', recipe_id=recipe.id) }}"
 >
-  <input type="submit" value="Delete" class="btn btn-danger" />
+  <input type="submit" value="Delete" class="btn btn-danger float-right" />
 </form>
 {% endif %}
+</div>
 </div>
 {% endif %}
 <div class="card">

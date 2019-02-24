@@ -1,4 +1,6 @@
 {% extends "layout.html" %} {% block body %}
+<div class="card mb-3">
+  <div class="card-body">
 <h1>{{ recipe.name }}</h1>
 <h5>
   <p><i>By: {{ username }}</i></p>
@@ -61,10 +63,12 @@
 </div>
 </div>
 {% endif %}
+</div>
+</div>
 <div class="card">
   <div class="card-body">
     <div class="card-title"><h4>Comments</h4></div>
-    {% if not comments == none %} {% for comment in comments %}
+    {% if comments %} {% for comment in comments %}
     <div class="card mb-3">
       <div class="card-body">
         <h5 class="card-title">{{ users[comment.account_id - 1].username }}</h5>

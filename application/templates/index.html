@@ -1,8 +1,37 @@
 {% extends "layout.html" %} {% block body %} {% if current_user.is_authenticated
 %}
-<p>Welcome, {{ current_user.username }}</p>
-<p>Wow! Your recipes have {{ commentcount_on_own_recipes }} comments</p>
-<p>You have commented on recipes {{ user_commentcount }} times!</p>
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-4">
+      Welcome to Recipebook Pro, {{ current_user.username }}
+    </h1>
+    <hr class="my-4" />
+    {% if commentcount_on_own_recipes > 0 %}
+    <p>Wow! Your recipes have {{ commentcount_on_own_recipes }} comments</p>
+    {% else %}
+    <p>Your recipes don't have any comments... Yet!</p>
+    {% endif %} {% if user_commentcount > 0 %}
+    <p>You have commented on recipes {{ user_commentcount }} times!</p>
+    {% else %}
+    <p>
+      You haven't commented on any recipes. Why wouldn't you try to cook one and
+      comment it?
+    </p>
+    {% endif %}
+  </div>
+</div>
 {% else %}
-<p>Welcome! Feel free to browse, register or login to unlock full potential!</p>
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-4">
+      Welcome to Recipebook Pro!
+    </h1>
+    <hr class="my-4" />
+    <p>
+      <a href="/auth/register">Register</a> or
+      <a href="/auth/login">login</a> now to start posting, commenting and
+      voting recipes!
+    </p>
+  </div>
+</div>
 {% endif %} {% endblock %}

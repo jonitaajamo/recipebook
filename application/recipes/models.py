@@ -18,6 +18,7 @@ class Vote(Base):
 
 class Recipe(Base):
     name = db.Column(db.String(144), nullable=False)
+    ingredients = db.Column(db.String(500), nullable=False)
     recipe_text = db.Column(db.String(1000), nullable=False)
     tips = db.Column(db.String(500), nullable=True)
     public = db.Column(db.Boolean, nullable=False)
@@ -27,8 +28,9 @@ class Recipe(Base):
     comments = db.relationship("Comment", backref='comment', lazy=True)
     votes = db.relationship("Vote", backref='vote', lazy=True)
 
-    def __init__(self, name, recipe_text, tips):
+    def __init__(self, name, ingredients, recipe_text, tips):
         self.name = name
         self.recipe_text = recipe_text
+        self.ingredients = ingredients
         self.tips = tips
         self.public = True

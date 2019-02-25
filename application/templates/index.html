@@ -12,6 +12,8 @@
     <p>Your recipes don't have any comments... Yet!</p>
     {% endif %} {% if user_commentcount > 0 %}
     <p>You have commented on recipes {{ user_commentcount }} times!</p>
+    {% elif user_commentcount == 1 %}
+    <p>You have commented once, keep going!</p>
     {% else %}
     <p>
       You haven't commented on any recipes. Why wouldn't you try to cook one and

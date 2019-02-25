@@ -4,7 +4,11 @@
 <h1>{{ recipe.name }}</h1>
 <h5>
   <p><i>By: {{ username }}</i></p>
+  {% if votes == 1 %}
+  <p><i>Somebody liked this recipe</i></p>
+  {% else %}
   <p><i>{{ votes }} people liked this recipe</i></p>
+  {% endif %}
 </h5>
 <div class="card bg-light mb-3">
     <div class="card-header">Ingredients</div>
@@ -71,15 +75,26 @@
     {% if comments %} {% for comment in comments %}
     <div class="card mb-3">
       <div class="card-body">
-        <h5 class="card-title">{{ users[comment.account_id - 1].username }}</h5>
+        <div class="row justify-content-between">
+        <h5 class="card-title col-4">{{ users[comment.account_id - 1].username }}</h5>
+        {% if current_user.id == comment.account_id %}
+        <form
+          method="GET"
+          action="{{ url_for('comment_delete', comment_id=comment.id) }}"
+          class="col-4"
+        >
+          <input type="submit" value="Delete" class="btn btn-danger float-right" />
+        </form>
+        {% endif %}
+      </div>
         <h7 class="card-subtitle mb-2 text-muted">
           {{ comment.date_created }}
         </h7>
         <p class="card-text">
           {{ comment.text }}
         </p>
-      </div>
     </div>
+</div>
     {% endfor %} {% else %}
     <p><i>No comments, why don't you write the first one?</i></p>
     {% endif %} {% if current_user.is_authenticated %}

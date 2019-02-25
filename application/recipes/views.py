@@ -126,7 +126,10 @@ def recipe_get(recipe_id):
     if current_user.is_authenticated:
         votedOnQuery = Vote.query.filter(Vote.account_id == current_user.id).all()
         for vote in votedOnQuery:
-            voted = True
+            if vote.recipe_id == recipe.id:
+                voted = True
+    
+    print("voted on recipe? " + str(voted) )
 
     form = CommentForm(request.form)
     return render_template("recipes/recipe.html", recipe=recipe, username=username, comments=comments, form=form, users=users, voted=voted, votes=votes)
@@ -146,3 +149,14 @@ def comment_create(recipe_id):
     db.session().commit()
 
     return redirect(url_for('recipe_get', recipe_id=recipe_id))
+
+@app.route("/delete/comment/<comment_id>/", methods=["GET"])
+@login_required(role="ANY")
+def comment_delete(comment_id):
+    commentToDelete = Comment.query.get(comment_id)
+    if commentToDelete.account_id != current_user.id:
+        return login_manager.unauthorized()
+    db.session.delete(commentToDelete)
+    db.session().commit()
+
+    return redirect(url_for('recipe_get', recipe_id=commentToDelete.recipe_id))

@@ -109,6 +109,10 @@ def recipe_delete(recipe_id):
     recipeToDelete = Recipe.query.get(recipe_id)
     if recipeToDelete.account_id != current_user.id:
         return login_manager.unauthorized()
+    deletevotes = Vote.__table__.delete().where(Vote.recipe_id == recipe_id)
+    deletecomments = Comment.__table__.delete().where(Comment.recipe_id == recipe_id)
+    db.session.execute(deletevotes)
+    db.session.execute(deletecomments)
     db.session.delete(recipeToDelete)
     db.session().commit()
 

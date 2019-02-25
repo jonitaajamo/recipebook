@@ -26,6 +26,7 @@
     </p>
   </div>
 </div>
+{% if recipe.tips %}
 <div class="card bg-light mb-3">
   <div class="card-header">Tips</div>
   <div class="card-body">
@@ -34,6 +35,7 @@
     </p>
   </div>
 </div>
+{% endif %}
 {% if current_user.is_authenticated %}
 <div class="btn-toolbar justify-content-between">
 <div class="btn-group mb-3">

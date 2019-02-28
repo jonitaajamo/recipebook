@@ -8,12 +8,6 @@
 
 `CREATE TABLE comment ( id INTEGER NOT NULL, date_created DATETIME, date_modified DATETIME, text VARCHAR(500) NOT NULL, recipe_id INTEGER NOT NULL, account_id INTEGER NOT NULL, PRIMARY KEY (id), FOREIGN KEY(recipe_id) REFERENCES recipe (id), FOREIGN KEY(account_id) REFERENCES account (id) );`
 
-`CREATE TABLE recipe_category (
-recipe_id INTEGER NOT NULL,
-category_id INTEGER NOT NULL,
-PRIMARY KEY (recipe_id, category_id),
-FOREIGN KEY(recipe_id) REFERENCES recipe (id),
-FOREIGN KEY(category_id) REFERENCES category (id)
-);``
+`CREATE TABLE recipe_category ( recipe_id INTEGER NOT NULL, category_id INTEGER NOT NULL, PRIMARY KEY (recipe_id, category_id), FOREIGN KEY(recipe_id) REFERENCES recipe (id), FOREIGN KEY(category_id) REFERENCES category (id) );`
 
 `CREATE TABLE vote ( id INTEGER NOT NULL, date_created DATETIME, date_modified DATETIME, account_id INTEGER NOT NULL, recipe_id INTEGER NOT NULL, PRIMARY KEY (id), FOREIGN KEY(account_id) REFERENCES account (id), FOREIGN KEY(recipe_id) REFERENCES recipe (id) );`

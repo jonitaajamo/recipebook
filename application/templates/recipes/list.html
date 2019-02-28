@@ -1,8 +1,16 @@
-{% extends "layout.html" %} {% block body %}
+{% extends "layout.html" %} {% block body %} {% if category %}
+<h1>{{ category.name }}</h1>
+{% else %}
 <h1>All recipes</h1>
-{% if not recipes %}
+{% endif %} {% if not recipes and not category %}
 <p>
   Oh no, it looks like there's not any recipes yet! Why don't you
+  <a href="/recipes/newrecipe">post</a> the first one?
+</p>
+{% elif category and not recipes %}
+<p>
+  Oh no, it looks like there's not any recipes in this category yet! Why don't
+  you
   <a href="/recipes/newrecipe">post</a> the first one?
 </p>
 {% endif %} {% for recipe in recipes %}

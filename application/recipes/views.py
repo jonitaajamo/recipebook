@@ -47,7 +47,7 @@ def recipes_by_categories(category_id):
     votedOn = []
     comments = Comment.query.all()
     commentcount = dict()
-    print("resepti " + str(recipes[0]))
+    category = Category.query.filter_by(id = category_id).first()
 
     for vote in votes:
         if not vote.recipe_id in votecount:
@@ -67,7 +67,7 @@ def recipes_by_categories(category_id):
             votedOn.append(vote.recipe_id)
 
     users = User.query.all()
-    return render_template("recipes/list.html", recipes = recipes, users = users, votes=votecount, votedOn=votedOn, commentcount=commentcount)
+    return render_template("recipes/list.html", recipes = recipes, users = users, votes=votecount, votedOn=votedOn, commentcount=commentcount, category = category)
 
 @app.route("/recipes/newrecipe/")
 @login_required(role="ANY")

@@ -2,10 +2,11 @@ from application import app, db, login_required, login_manager
 from flask import redirect, render_template, request, url_for
 from flask_login import current_user
 
-from application.recipes.models import Recipe, Vote
+from application.recipes.models import Recipe, Vote, RecipeCategory
 from application.comments.models import Comment
 from application.recipes.forms import RecipeForm
 from application.comments.forms import CommentForm
+from application.categories.models import Category
 
 from application.auth.models import User
 
@@ -17,6 +18,36 @@ def recipes_index():
     votedOn = []
     comments = Comment.query.all()
     commentcount = dict()
+
+    for vote in votes:
+        if not vote.recipe_id in votecount:
+            votecount[vote.recipe_id] = 1
+        else:
+            votecount[vote.recipe_id] += 1
+
+    for comment in comments:
+        if not comment.recipe_id in commentcount:
+            commentcount[comment.recipe_id] = 1
+        else:
+            commentcount[comment.recipe_id] += 1
+
+    if current_user.is_authenticated:
+        votedOnQuery = Vote.query.filter(Vote.account_id == current_user.id).all()
+        for vote in votedOnQuery:
+            votedOn.append(vote.recipe_id)
+
+    users = User.query.all()
+    return render_template("recipes/list.html", recipes = recipes, users = users, votes=votecount, votedOn=votedOn, commentcount=commentcount)
+
+@app.route("/recipes/category/<category_id>", methods=["GET"])
+def recipes_by_categories(category_id):
+    recipes = Recipe.get_recipes_by_category(category_id)
+    votes = Vote.query.all()
+    votecount = dict()
+    votedOn = []
+    comments = Comment.query.all()
+    commentcount = dict()
+    print("resepti " + str(recipes[0]))
 
     for vote in votes:
         if not vote.recipe_id in votecount:
@@ -51,10 +82,18 @@ def recipe_create():
         return render_template("recipes/newrecipe.html", form = form)
 
     r = Recipe(form.name.data, form.ingredients.data, form.recipetext.data, form.tips.data)
+
+
     r.account_id = current_user.id
 
     db.session().add(r)
-    db.session().commit()
+    db.session.commit()
+
+    for category in form.categories.data:
+        rc = RecipeCategory(r.id, category.id)
+        db.session.add(rc)
+    
+    db.session.commit()
 
     return redirect(url_for("recipes_index"))
 
@@ -71,7 +110,7 @@ def recipe_update(recipe_id):
     form.ingredients.data = rToUpdate.ingredients
     form.recipetext.data = rToUpdate.recipe_text
     form.tips.data = rToUpdate.tips
-    
+
     if request.method == "GET":
         return render_template("recipes/editrecipe.html", form=form, recipe=rToUpdate)
     
@@ -111,8 +150,10 @@ def recipe_delete(recipe_id):
         return login_manager.unauthorized()
     deletevotes = Vote.__table__.delete().where(Vote.recipe_id == recipe_id)
     deletecomments = Comment.__table__.delete().where(Comment.recipe_id == recipe_id)
+    deletecategories = RecipeCategory.__table__.delete().where(RecipeCategory.recipe_id == recipe_id)
     db.session.execute(deletevotes)
     db.session.execute(deletecomments)
+    db.session.execute(deletecategories)
     db.session.delete(recipeToDelete)
     db.session().commit()
 
@@ -126,17 +167,22 @@ def recipe_get(recipe_id):
     users = User.query.all()
     voted = False
     votes = Vote.query.filter_by(recipe_id = recipe_id).count()
+    recipeCategories = RecipeCategory.query.filter_by(recipe_id = recipe_id).all()
+    categories = []
+
+    for recipeCategory in recipeCategories:
+        category = Category.query.filter_by(id = recipeCategory.category_id).all()
+        for item in category:
+            categories.append(item.name)
 
     if current_user.is_authenticated:
         votedOnQuery = Vote.query.filter(Vote.account_id == current_user.id).all()
         for vote in votedOnQuery:
             if vote.recipe_id == recipe.id:
                 voted = True
-    
-    print("voted on recipe? " + str(voted) )
 
     form = CommentForm(request.form)
-    return render_template("recipes/recipe.html", recipe=recipe, username=username, comments=comments, form=form, users=users, voted=voted, votes=votes)
+    return render_template("recipes/recipe.html", recipe=recipe, username=username, comments=comments, form=form, users=users, voted=voted, votes=votes, categories=categories)
 
 @app.route("/comment/<recipe_id>/", methods=["POST"])
 @login_required(role="ANY")

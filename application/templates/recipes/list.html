@@ -1,8 +1,12 @@
 {% extends "layout.html" %} {% block body %}
 <h1>All recipes</h1>
-{% if not current_user.is_authenticated %}
-<p>Login to vote!</p>
+{% if not recipes %}
+<p>
+  Oh no, it looks like there's not any recipes yet! Why don't you
+  <a href="/recipes/newrecipe">post</a> the first one?
+</p>
 {% endif %} {% for recipe in recipes %}
+
 <div class="card w-100 mb-3 card-block">
   <div class="card-body">
     <h5 class="card-title">

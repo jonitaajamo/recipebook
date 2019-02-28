@@ -36,6 +36,26 @@
   </div>
 </div>
 {% endif %}
+{% if categories %}
+<div class="card bg-light mb-3">
+  <div class="card-header">Categories</div>
+  <div class="card-body">
+    <p class="card-text">
+        <ul class="list-inline">
+        {% for category in categories %}
+        <li class="list-inline-item">
+            <div class="card">
+                <div class="card-body">
+                  {{ category }}
+                </div>
+              </div>
+      </li>
+        {% endfor %}
+      </ul>
+    </p>
+  </div>
+</div>
+{% endif %}
 {% if current_user.is_authenticated %}
 <div class="btn-toolbar justify-content-between">
 <div class="btn-group mb-3">

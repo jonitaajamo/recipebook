@@ -2,7 +2,7 @@
 <h1>Edit a recipe</h1>
 <form
   method="POST"
-  action="{{ url_for('recipe_update', recipe_id=recipe.id )}}"
+  action="{{ url_for('recipe_update', recipe_id=recipe.id) }}"
 >
   <div class="form-group">
     {{ form.name.label }}

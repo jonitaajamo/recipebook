@@ -1,0 +1,15 @@
+{% extends "layout.html" %} {% block body %}
+<h1>Categories</h1>
+
+{% for category in categories%}
+<div class="card w-100 mb-3 card-block">
+  <div class="card-body">
+    <h5 class="card-title">
+      <a href="/recipes/category/{{ category.id }}">{{ category.name }}</a>
+    </h5>
+    <h6 class="card-subtitle mb-2 text-muted">
+      Recipes: {{ category_count[category.id] }}
+    </h6>
+  </div>
+</div>
+{% endfor %} {% endblock %}

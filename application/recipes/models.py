@@ -3,10 +3,16 @@ from application.models import Base
 from application.categories.models import Category
 from application.comments.models import Comment
 
+from sqlalchemy.sql import text
+
 class RecipeCategory(db.Model):
     __table_args__ = (db.PrimaryKeyConstraint('recipe_id', 'category_id'),)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+
+    def __init__(self, recipe_id, category_id):
+        self.recipe_id = recipe_id
+        self.category_id = category_id
 
 class Vote(Base):
     account_id = db.Column(db.Integer, db.ForeignKey('account.id'), nullable=False)
@@ -34,3 +40,18 @@ class Recipe(Base):
         self.ingredients = ingredients
         self.tips = tips
         self.public = True
+
+    @staticmethod
+    def get_recipes_by_category(category_id):
+        stmt = text("SELECT recipe.id, recipe.name, recipe.account_id FROM recipe"
+                    " LEFT JOIN recipe_category ON recipe_category.recipe_id = recipe.id"
+                    " LEFT JOIN category ON category.id = recipe_category.category_id"
+                    " WHERE category.id = :categoryid ")
+
+        response = db.engine.execute(stmt, categoryid = category_id)
+        res = []
+
+        for row in response:
+            res.append(row)
+
+        return res

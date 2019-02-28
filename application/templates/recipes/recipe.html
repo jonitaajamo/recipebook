@@ -100,13 +100,22 @@
         <div class="row justify-content-between">
         <h5 class="card-title col-4">{{ users[comment.account_id - 1].username }}</h5>
         {% if current_user.id == comment.account_id %}
+        <div class="btn-group float-right">
+        <form
+          method="GET"
+          action="{{ url_for('comment_form', comment_id=comment.id) }}"
+          class="col-4"
+        >
+          <input type="submit" value="Edit" class="btn btn-info" />
+        </form>
         <form
           method="GET"
           action="{{ url_for('comment_delete', comment_id=comment.id) }}"
           class="col-4"
         >
-          <input type="submit" value="Delete" class="btn btn-danger float-right" />
+          <input type="submit" value="Delete" class="btn btn-danger" />
         </form>
+      </div>
         {% endif %}
       </div>
         <h7 class="card-subtitle mb-2 text-muted">

@@ -1,0 +1,18 @@
+{% extends "layout.html" %} {% block body %}
+<form
+  method="POST"
+  action="{{ url_for('comment_update', comment_id = comment.id) }}"
+>
+  <div class="form-group">
+    {{ form.text(class="form-control rows=3") }}
+    {% for error in form.text.errors %}
+    <div class="card">
+      <div class="card-body text-white bg-warning">
+        {{ error }}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <input type="submit" class="btn btn-success" value="Confirm" />
+</form>
+{% endblock %}

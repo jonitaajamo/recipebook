@@ -169,6 +169,7 @@ def recipe_get(recipe_id):
     votes = Vote.query.filter_by(recipe_id = recipe_id).count()
     recipeCategories = RecipeCategory.query.filter_by(recipe_id = recipe_id).all()
     categories = []
+    form = CommentForm(request.form)
 
     for recipeCategory in recipeCategories:
         category = Category.query.filter_by(id = recipeCategory.category_id).all()
@@ -181,15 +182,49 @@ def recipe_get(recipe_id):
             if vote.recipe_id == recipe.id:
                 voted = True
 
-    form = CommentForm(request.form)
     return render_template("recipes/recipe.html", recipe=recipe, username=username, comments=comments, form=form, users=users, voted=voted, votes=votes, categories=categories)
+
+@app.route("/update/comment/<comment_id>", methods=["GET"])
+@login_required(role="ANY")
+def comment_form(comment_id):
+    commentToUpdate = Comment.query.filter_by(id = comment_id).first()
+
+    if commentToUpdate.account_id != current_user.id:
+        return login_manager.unauthorized()
+
+    form = CommentForm(request.form)
+    form.text.data = commentToUpdate.text
+
+    return render_template("recipes/commentedit.html", form=form, comment = commentToUpdate)
+
+@app.route("/update/comment/<comment_id>", methods=["POST", "GET"])
+@login_required(role="ANY")
+def comment_update(comment_id):
+    commentToUpdate = Comment.query.filter_by(id = comment_id).first()
+    recipe_id = commentToUpdate.recipe_id
+
+    if commentToUpdate.account_id != current_user.id:
+        return login_manager.unauthorized()
+
+    form = CommentForm(request.form)
+
+    if not form.validate():
+        return render_template("recipes/commentedit.html", form=form)
+    
+    form = CommentForm(request.form)
+    commentToUpdate.text = form.text.data
+
+    db.session().add(commentToUpdate)
+    db.session().commit()
+
+    return redirect(url_for('recipe_get', recipe_id=recipe_id))
 
 @app.route("/comment/<recipe_id>/", methods=["POST"])
 @login_required(role="ANY")
 def comment_create(recipe_id):
     form = CommentForm(request.form)
     if not form.validate():
-        return render_template("recipes/<recipe_id>/", form = form)
+        return redirect(url_for('recipe_get', recipe_id=recipe_id))
 
     c = Comment(form.text.data)
     c.account_id = current_user.id

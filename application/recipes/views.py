@@ -81,17 +81,17 @@ def recipe_create():
     if not form.validate():
         return render_template("recipes/newrecipe.html", form = form)
 
-    r = Recipe(form.name.data, form.ingredients.data, form.recipetext.data, form.tips.data)
+    newrecipe = Recipe(form.name.data, form.ingredients.data, form.recipetext.data, form.tips.data)
 
 
-    r.account_id = current_user.id
+    newrecipe.account_id = current_user.id
 
-    db.session().add(r)
+    db.session().add(newrecipe)
     db.session.commit()
 
     for category in form.categories.data:
-        rc = RecipeCategory(r.id, category.id)
-        db.session.add(rc)
+        newrecipecategory = RecipeCategory(newrecipe.id, category.id)
+        db.session.add(newrecipecategory)
     
     db.session.commit()
 
@@ -132,8 +132,8 @@ def recipe_update(recipe_id):
 @app.route("/recipes/<recipe_id>/", methods=["POST"])
 @login_required(role="ANY")
 def recipe_vote(recipe_id):
-    v = Vote.query.filter(Vote.account_id == current_user.id).filter(Vote.recipe_id == recipe_id).all()
-    if v:
+    vote = Vote.query.filter(Vote.account_id == current_user.id).filter(Vote.recipe_id == recipe_id).all()
+    if vote:
         return render_template('error.html'), 403
     
     newv = Vote(current_user.id, recipe_id)
